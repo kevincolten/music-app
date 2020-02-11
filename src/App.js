@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { AppBar, Toolbar, Typography, Snackbar } from '@material-ui/core';
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    loggedIn: false,
+    online: true,
+    notification: ''
+  }
+
+  login = (e) => {
+    e.preventDefault()
+    this.setState({ loggedIn: true })
+  }
+
+  toggleOnline = (e) => {
+    let online = !this.state.online;
+    this.setState({
+      online,
+      notification: online ? '' : 'You are not online!'
+    })
+  }
+
+  handleClose = () => {
+    this.setState({ notification: '' })
+  }
+
+  render = () => {
+    return (
+      <div>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6">
+              Music App
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        {this.state.loggedIn ? <Dashboard checked={this.state.online} toggleOnline={this.toggleOnline} /> : <Login onSubmit={this.login} /> }
+        <Snackbar open={!!this.state.notification} onClose={this.handleClose} message={this.state.notification} />
+      </div>
+    );
+  }
+
 }
 
 export default App;
